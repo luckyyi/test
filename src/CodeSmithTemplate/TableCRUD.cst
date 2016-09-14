@@ -1,0 +1,225 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="T-SQL" Inherits="CodeTemplate" ResponseEncoding="UTF-8" Description="Generates a very simple business object." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Map Name="SqlCSharp" Src="Sql-CSharp" Description="System to C# Type Map" %>
+<%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
+<%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
+<%@ Map Name="DbTypeCSharp" Src="DbType-CSharp" Description="DbType to CSharp Map" %>
+USE <%= SourceTable.Database.Name %>
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<%= GetClassName(SourceTable) %>InsertUpdateDelete]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<%= GetClassName(SourceTable) %>InsertUpdateDelete]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- 新增 修改 删除
+CREATE PROCEDURE [dbo].[usp_<%= GetClassName(SourceTable) %>InsertUpdateDelete]
+(
+    <% for (int i = 0; i < SourceTable.Columns.Count; i++) {%>
+    @<%= GetPropertyName(SourceTable.Columns[i])%> <%= GetSqlDbType(SourceTable.Columns[i])%><%= GetPropertySize(SourceTable.Columns[i])%> = <%= GetPropertyDefaultValue(SourceTable.Columns[i])%>,
+    <%}%>
+    @DBOperationAction int = 0
+)
+AS
+
+	DECLARE @ReturnValue int -- 返回值
+	
+	SET @ReturnValue = -1
+    
+    -- 新增
+    IF (@DBOperationAction = 1)
+    BEGIN
+    <%
+    bool HasPriKey = SourceTable.HasPrimaryKey;
+    int NonKeyCount = SourceTable.NonPrimaryKeyColumns.Count;
+    int PriKeyCount = HasPriKey ? SourceTable.PrimaryKey.MemberColumns.Count : 0;
+
+    if(HasPriKey){
+    if(PriKeyCount>1) {%>
+        IF EXISTS (SELECT 1 FROM [<%= GetClassName(SourceTable) %>] WHERE <% for (int i = 0; i < PriKeyCount; i++) { %>[<%= GetPropertyName(SourceTable.PrimaryKey.MemberColumns[i])%>] = @<%= GetPropertyName(SourceTable.PrimaryKey.MemberColumns[i])%><% if( i < PriKeyCount - 1){ %> AND <% } %><% } %> ) 
+            SET @ReturnValue = 0
+        ELSE
+        BEGIN
+    <% }} %>
+        INSERT INTO [<%= GetClassName(SourceTable) %>](
+        <%
+        if(HasPriKey){
+        if(PriKeyCount > 1){
+        for (int i = 0; i < PriKeyCount; i++) {%>
+            [<%= GetPropertyName(SourceTable.PrimaryKey.MemberColumns[i])%>], 
+        <% }
+        }
+        }
+        for (int i = 0; i < NonKeyCount; i++) {%>
+            [<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i])%>]<% if( i < NonKeyCount - 1){%>,<%}%>
+        <%}%>
+        ) Values (
+        <%
+        if(HasPriKey){
+        if(PriKeyCount > 1){
+        for (int i = 0; i < PriKeyCount; i++) {%>
+            @<%= GetPropertyName(SourceTable.PrimaryKey.MemberColumns[i])%>, 
+        <% }
+        }
+        }
+        for (int i = 0; i < NonKeyCount; i++) {%>
+            @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i])%><% if( i < NonKeyCount - 1){%>,<%}%>
+        <%}%>
+        )
+        
+        SET @ReturnValue = @@ROWCOUNT
+        <% if (PriKeyCount > 1) { %>
+        END
+        <% } %>
+    END
+    
+    <% if(HasPriKey){ %>
+    -- 修改    
+    IF (@DBOperationAction = 2)
+    BEGIN
+        UPDATE [<%= GetClassName(SourceTable) %>] SET
+        <%
+        for (int i = 0; i < NonKeyCount; i++) {%>
+            [<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i])%>] = @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i])%><% if( i < NonKeyCount - 1){%>,<%}%>
+        <%}%>
+        WHERE (<% for(int i = 0; i < PriKeyCount; i++) {%> [<%= SourceTable.PrimaryKey.MemberColumns[i].Name %>] = @<%= SourceTable.PrimaryKey.MemberColumns[i].Name %><% if(i < PriKeyCount - 1){ %> AND <% } %><% } %>)
+        
+        SET @ReturnValue = @@ROWCOUNT
+    END
+    
+    -- 删除
+    IF (@DBOperationAction = 3)
+    BEGIN
+        DELETE [<%= GetClassName(SourceTable) %>] WHERE (<% for(int i = 0; i < PriKeyCount; i++) {%>[<%= SourceTable.PrimaryKey.MemberColumns[i].Name %>] = @<%= SourceTable.PrimaryKey.MemberColumns[i].Name %><% if(i < PriKeyCount -1){ %> AND <% } %><% } %>)
+        SET @ReturnValue = @@ROWCOUNT
+    END
+    <% } %>
+    SELECT @ReturnValue
+
+GO
+<script runat="template">
+public string GetMemberVariableDeclarationStatement(ColumnSchema column)
+{
+	return GetMemberVariableDeclarationStatement("public", column);
+}
+
+public string GetMemberVariableDeclarationStatement(string protectionLevel, ColumnSchema column)
+{
+	string statement = protectionLevel + " ";
+	statement += GetCSharpVariableType(column) + " " + GetMemberVariableName(column);
+	
+	statement += " { get; set;}";
+	
+	return statement;
+}
+
+public string GetReaderAssignmentStatement(ColumnSchema column, int index)
+{
+	string statement = "if (!reader.IsDBNull(" + index.ToString() + ")) ";
+	statement += GetMemberVariableName(column) + " = ";
+	
+	if (column.Name.EndsWith("TypeCode")) statement += "(" + column.Name + ")";
+	
+	statement += "reader." + GetReaderMethod(column) + "(" + index.ToString() + ");";
+	
+	return statement;
+}
+
+public string GetMemberVariableName(ColumnSchema column)
+{
+	string propertyName = GetPropertyName(column);
+	return propertyName;
+}
+
+public string GetPropertyName(ColumnSchema column)
+{
+	string propertyName = column.Name;
+	
+	if (propertyName == column.Table.Name + "Name") return "Name";
+	if (propertyName == column.Table.Name + "Description") return "Description";
+	
+	if (propertyName.EndsWith("TypeCode")) propertyName = propertyName.Substring(0, propertyName.Length - 4);
+    
+	return propertyName;
+}
+
+public string GetPropertySize(ColumnSchema column)
+{
+    string propertySize = "";
+    switch(GetSqlDbType(column).ToLower())
+    {
+        case "nvarchar":
+        case "nchar":
+        case "char":
+        case "varchar":
+            if(column.Size != -1)
+                propertySize += "(" + column.Size + ")";
+            else
+                propertySize += "(MAX)";
+            break;
+        default:
+            break;
+    }
+    
+    return propertySize;
+}
+
+public string GetPropertyDefaultValue(ColumnSchema column)
+{
+	string DefaultValue = "''";
+    switch (GetSqlDbType(column).ToLower())
+    {
+        case "int":
+        case "tinyint":
+        case "bigint":
+        case "bit":
+        case "decimal":
+        case "float":
+        case "money":
+        case "smallint":
+            return "0";
+        case "date":
+        case "datetime":
+            return "NULL";
+        case "nchar":
+        case "nvarchar":
+            return "N''";
+        default:
+            break;
+    }
+	
+	return DefaultValue;
+}
+        
+public string GetCSharpVariableType(ColumnSchema column)
+{
+	//if (column.Name.EndsWith("TypeCode")) return column.Name;
+	return DbTypeCSharp[column.DataType.ToString()];	
+}
+
+public string GetReaderMethod(ColumnSchema column)
+{
+	return DbDataReader[column.DataType.ToString()];
+}
+
+public string GetClassName(TableSchema table)
+{
+    return table.Name;
+}
+
+public string GetSqlDbType(ColumnSchema column)
+{
+	return SqlNativeSqlDb[column.NativeType.ToString()];
+}
+</script>

@@ -1,0 +1,19 @@
+﻿<%@ CodeTemplate Inherits="CodeTemplate" Language="C#" TargetLanguage="Text" Description="NetTiers main template." Debug="True" ResponseEncoding="UTF-8"%>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%-- 表 --%>
+<%@ Property Name="Table" Type="SchemaExplorer.TableSchema" DeepLoad="True"Optional="False" Category="01. Getting Started - Required"Description="Database that the tables views, and stored procedures shouldbe based on. IMPORTANT!!! If SourceTables and SourceViews are left blank, theEntire Database will then be generated." %>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Entity
+{
+    public partial class <%= Table.Name%>
+    {
+        <% foreach(ColumnSchema col in Table.Columns){ %>
+        public <%= col.DataType %> <%=col.Name %>{ get;set; }
+        <% } %>
+    }
+}

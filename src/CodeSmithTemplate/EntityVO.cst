@@ -1,0 +1,26 @@
+﻿<%@ CodeTemplate Inherits="CodeTemplate" Language="C#" TargetLanguage="Text" Description="NetTiers main template." Debug="True" ResponseEncoding="UTF-8"%>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%-- 表 --%>
+<%@ Property Name="Table" Type="SchemaExplorer.TableSchema" DeepLoad="True"Optional="False" Category="01. Getting Started - Required"Description="Database that the tables views, and stored procedures shouldbe based on. IMPORTANT!!! If SourceTables and SourceViews are left blank, theEntire Database will then be generated." %>
+import java.io.Serializable;
+
+public class <%= Table.Name%>VO implements Serializable {
+	<% foreach(ColumnSchema col in Table.Columns){ %>
+	private String <%=col.Name %>;
+	<% } %>
+
+	<% foreach(ColumnSchema col in Table.Columns){ %>
+	public String get<%=col.Name %>(){
+		return <%=col.Name %>;
+	}
+
+	public void set<%=col.Name %>(String <%=col.Name %>){
+		this.<%=col.Name %> = <%=col.Name %>;
+	}
+
+	<% } %>
+
+
+
+}

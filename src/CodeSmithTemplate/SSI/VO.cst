@@ -1,0 +1,128 @@
+﻿<%@ CodeTemplate Language="C#" ResponseEncoding="UTF-8" Inherits="CodeTemplate" TargetLanguage="C#" Description="Generates a very simple business object." %>
+<%-- CodeTemplate Language="C#" ResponseEncoding="UTF-8" Inherits="OutputFileCodeTemplate" TargetLanguage="C#" Description="Generates a very simple business object." --%>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
+<%@ Property Name="packageName" Type="System.String" Category="Options" Description="Namespace your class is in. Only used if SingleFileMode is true!" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Map Name="SqlCSharp" Src="Sql-CSharp" Description="System to C# Type Map" %>
+<%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
+<%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
+<%@ Map Name="DbTypeCSharp" Src="DbType-CSharp" Description="DbType to CSharp Map" %>
+<% string prefix = string.Format("{0}.{1}", this.packageName, this.SourceTable.Name); %>
+package <%= prefix %>.vo;
+
+import java.io.Serializable;
+
+public class <%= this.SourceTable.Name%>VO implements Serializable {
+    
+<% foreach (ColumnSchema column in SourceTable.Columns) { %>
+	<%= GetMemberVariableDeclarationStatement(column) %>
+<%}%>
+   
+<% foreach(ColumnSchema col in SourceTable.Columns){ %>
+	public String get<%=col.Name %>(){
+		return <%=col.Name %>;
+	}
+
+	public void set<%=col.Name %>(String <%=col.Name %>){
+		this.<%=col.Name %> = <%=col.Name %>;
+	}
+
+	<% } %>
+
+}
+<%-- OutputFile = string.Format("{0}\\{1}{2}",OutputDirectory , GetClassName(SourceTable), ".cs");  %>
+<% System.Diagnostics.Process.Start(OutputDirectory); --%>
+<script runat="template">
+public string GetMemberVariableDeclarationStatement(ColumnSchema column)
+{
+	return GetMemberVariableDeclarationStatement("private", column);
+}
+
+public string GetMemberVariableList(ColumnSchema column)
+{
+    string strList = "";
+    strList += GetCSharpVariableType(column) + " var" + GetMemberVariableName(column) + ", ";
+    
+    return strList;
+}
+
+public string GetMemberVariableDeclarationStatement(string protectionLevel, ColumnSchema column)
+{
+	string statement = protectionLevel + " ";
+	//statement += GetCSharpVariableType(column);
+        
+    statement += "String " + GetMemberVariableName(column) + ";";
+	
+	return statement;
+}
+
+public string GetReaderAssignmentStatement(ColumnSchema column, int index)
+{
+	string statement = "if (!reader.IsDBNull(" + index.ToString() + ")) ";
+	statement += GetMemberVariableName(column) + " = ";
+	
+	if (column.Name.EndsWith("TypeCode")) statement += "(" + column.Name + ")";
+	
+	statement += "reader." + GetReaderMethod(column) + "(" + index.ToString() + ");";
+	
+	return statement;
+}
+
+public string GetMemberVariableName(ColumnSchema column)
+{
+	string propertyName = GetPropertyName(column);
+	return propertyName;
+}
+
+public string GetPropertyName(ColumnSchema column)
+{
+	string propertyName = column.Name;
+	
+	if (propertyName == column.Table.Name + "Name") return "Name";
+	if (propertyName == column.Table.Name + "Description") return "Description";
+	
+	if (propertyName.EndsWith("TypeCode")) propertyName = propertyName.Substring(0, propertyName.Length - 4);
+	
+	return propertyName;
+}
+		
+public string GetCSharpVariableType(ColumnSchema column)
+{
+	//if (column.Name.EndsWith("TypeCode")) return column.Name;
+	return DbTypeCSharp[column.DataType.ToString()];	
+}
+
+public string GetReaderMethod(ColumnSchema column)
+{
+	return DbDataReader[column.DataType.ToString()];
+}
+
+public string GetClassName(TableSchema table)
+{
+    return table.Name;
+}
+
+public string GetSqlDbType(ColumnSchema column)
+{
+	return SqlNativeSqlDb[column.NativeType.ToString()];
+}
+
+public override string GetFileName()
+{
+	return this.GetClassName(this.SourceTable) + ".cs";
+}
+
+/*private string _outputDirectory = @"d:\";
+[Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor)),
+ Category("Output"), Description("Output directory.")]
+ public string OutputDirectory
+ {
+        get {return _outputDirectory;}
+        set {_outputDirectory= value;}
+}*/
+</script>
