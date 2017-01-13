@@ -28,6 +28,15 @@ System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | S
   - 在异步方法中直接用 .Result 去获取数据，有时会无限等待，最好用下面的类。
   - http://stackoverflow.com/questions/5095183/how-would-i-run-an-async-taskt-method-synchronously
   - https://social.msdn.microsoft.com/Forums/en-US/163ef755-ff7b-4ea5-b226-bbe8ef5f4796/is-there-a-pattern-for-calling-an-async-method-synchronously?forum=async
+  
+- MVC传递匿名参数
+  ```
+    //传递匿名对象
+    @Html.Partial("~/Views/Shared/_CustomerSupport.cshtml", new { btnId = "msgus-mb" })
+    
+    //反射获取btnId值
+    <a herf="#" id="@Model.GetType().GetProperty("btnId").GetValue(Model, null).ToString()" class="fauxA"> Message Us</a> 
+  ```
 
 - icon svg字体生成
   - https://icomoon.io/app/#/select
