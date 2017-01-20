@@ -8,10 +8,16 @@
 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls; // comparable to modern browsers
 ```
 
+
 - NServiceBus 在命令行运行时报错 Index was outside the bounds of the array.
   - https://github.com/Particular/NServiceBus/issues/1964
   - V4.4.0的Bug，在命令行运行要用双引号把执行路径包起来。
-
+  
+  
+- NHibernate的子对象为空时报错： NHibernate.ObjectNotFoundException: No row with the given identifier exists
+  - 在Mapping的代码加上 .NotFound.Ignore();
+  
+ 
 # C#技巧
 - App.Config，各个环境不同配置的覆盖。
   - 首先安装Extensions and updates : SlowCheetah
