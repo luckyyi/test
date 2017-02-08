@@ -43,6 +43,29 @@ System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | S
     //反射获取btnId值
     <a herf="#" id="@Model.GetType().GetProperty("btnId").GetValue(Model, null).ToString()" class="fauxA"> Message Us</a> 
   ```
+  
+- 枚举及为什么要用1，2，4，8这些2的n次幂来表示枚举的值
+  - 枚举使用组合形式，这个时候一般需要为枚举加上[Flags]特性标记为位域，例如： 
+  ```
+    [Flags]  
+    enum Styles{  
+    ShowBorder = 1,         //是否显示边框 
+    ShowCaption = 2,        //是否显示标题 
+    ShowToolbox = 4         //是否显示工具箱 
+    } 
+```
+　　这样我们就可以用"或"运算符组合多个状态，例如 myControl.Style = Styles.ShowBorder | Styles.ShowCaption;  
+　　这时myControl.Style枚举的值将变成 1+2=3，它的ToString()将变成"Styles.ShowBorder , Styles.ShowCaption" 
+　　这里我们可以解释为什么第三个值ShowToolbox可以为4,5..而不能为3。也就是说它的值不应该是前几项值的复合值。有一个比较简单的方法就是用2的n次方来依次为每一项赋值，例如 1,2,4,8,16,32,64..... 
+    现在举个常见的Flags应用例子。例如一个简单的权限系统，有"Admin"和"User"两种角色，我们可以在表中放一个varchar()字段，以文本形式存放权限字"Admin,User"。但是用Flags型枚举的话，我们就可以直接将 Roles.Admin | Roles.User 的值放在一个int字段里。
+    检查枚举是否包含某个元素：
+    `
+    bool hasFlag = ((style & Styles.ShowBorder) != 0);
+    `
+    其实我们还会碰到一种情况，就是需要从组合状态中去掉一个元素。
+    `
+    style = style & (~Styles.ShowBorder) //可以方便去掉一个元素。
+    `
 
 - icon svg字体生成
   - https://icomoon.io/app/#/select
