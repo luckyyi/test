@@ -1,4 +1,8 @@
-﻿svn
+- VPN
+  - gzremote.theknot.us 113.108.131.227 if gzremote cannot use. directly use the ip to connect.
+
+
+- svn
 svn://114.33.138.24:3361/wlp-web
 svn://114.33.138.24:3361/wlp-admin
 svn://114.33.138.24:3361/wlp-doc
