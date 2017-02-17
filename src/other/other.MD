@@ -1,3 +1,6 @@
+- Fiddler
+  - Fiddler在Chrome无法抓取，IE没有问题，出现这种情况一般是SwitchySharp设置了代理，直接选取System Proxy即可。
+  
 - VPN
   - gzremote.theknot.us 113.108.131.227 if gzremote cannot use. directly use the ip to connect.
 
