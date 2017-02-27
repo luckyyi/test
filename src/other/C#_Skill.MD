@@ -66,6 +66,8 @@ System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | S
     `
     style = style & (~Styles.ShowBorder) //可以方便去掉一个元素。
     `
+- 枚举加自定义属性
+  - `http://blog.csdn.net/fanbin168/article/details/51576581`
 
 - icon svg字体生成
   - https://icomoon.io/app/#/select
