@@ -35,5 +35,7 @@ sudo docker start fe-tkp-dev
   - 原因：
     - SQL Server Report强制把Reports接管了，删除即可
 
+- windows hyper-v C#
+   - `http://www.cnblogs.com/Peter-Zhang/archive/2011/09/17/2179634.html`
 
-果了Q3023284403
+  - 了Q3023284403
