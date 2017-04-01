@@ -34,26 +34,37 @@ System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | S
   - 在异步方法中直接用 .Result 去获取数据，有时会无限等待，最好用下面的类。
   - http://stackoverflow.com/questions/5095183/how-would-i-run-an-async-taskt-method-synchronously
   - https://social.msdn.microsoft.com/Forums/en-US/163ef755-ff7b-4ea5-b226-bbe8ef5f4796/is-there-a-pattern-for-calling-an-async-method-synchronously?forum=async
-  
+
+
 - MVC传递匿名参数
+
+  ```//传递匿名对象
+  @Html.Partial("~/Views/Shared/_CustomerSupport.cshtml", new { btnId = "msgus-mb" })
+  //反射获取btnId值
+  <a herf="#" id="@Model.GetType().GetProperty("btnId").GetValue(Model, null).ToString()" class="fauxA"> Message Us</a>
   ```
-    //传递匿名对象
-    @Html.Partial("~/Views/Shared/_CustomerSupport.cshtml", new { btnId = "msgus-mb" })
-    
-    //反射获取btnId值
-    <a herf="#" id="@Model.GetType().GetProperty("btnId").GetValue(Model, null).ToString()" class="fauxA"> Message Us</a> 
+  
+- Url中去除指定参数
+
+  ```
+  NameValueCollection filtered = HttpUtility.ParseQueryString(HttpContext.Current.Request.Url.Query);
+  filtered.Remove("Language");
+
+  var uri = Request.Url.AbsolutePath + "?" + filtered.ToString();
   ```
   
 - 枚举及为什么要用1，2，4，8这些2的n次幂来表示枚举的值
   - 枚举使用组合形式，这个时候一般需要为枚举加上[Flags]特性标记为位域，例如： 
-  ```
+  
+    ```
     [Flags]  
     enum Styles{  
     ShowBorder = 1,         //是否显示边框 
     ShowCaption = 2,        //是否显示标题 
     ShowToolbox = 4         //是否显示工具箱 
     } 
-```
+    ```
+    
 　　这样我们就可以用"或"运算符组合多个状态，例如 myControl.Style = Styles.ShowBorder | Styles.ShowCaption;  
 　　这时myControl.Style枚举的值将变成 1+2=3，它的ToString()将变成"Styles.ShowBorder , Styles.ShowCaption" 
 　　这里我们可以解释为什么第三个值ShowToolbox可以为4,5..而不能为3。也就是说它的值不应该是前几项值的复合值。有一个比较简单的方法就是用2的n次方来依次为每一项赋值，例如 1,2,4,8,16,32,64..... 
