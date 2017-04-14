@@ -70,15 +70,19 @@ System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | S
 　　这里我们可以解释为什么第三个值ShowToolbox可以为4,5..而不能为3。也就是说它的值不应该是前几项值的复合值。有一个比较简单的方法就是用2的n次方来依次为每一项赋值，例如 1,2,4,8,16,32,64..... 
     现在举个常见的Flags应用例子。例如一个简单的权限系统，有"Admin"和"User"两种角色，我们可以在表中放一个varchar()字段，以文本形式存放权限字"Admin,User"。但是用Flags型枚举的话，我们就可以直接将 Roles.Admin | Roles.User 的值放在一个int字段里。
     
-    检查枚举是否包含某个元素：
+检查枚举是否包含某个元素：
 ```
     var style = (Styles)7;
     bool hasFlag = ((style & Styles.ShowBorder) != 0);
 ```
-
-    其实我们还会碰到一种情况，就是需要从组合状态中去掉一个元素。
+其实我们还会碰到一种情况，就是需要从组合状态中去掉一个元素。
 ```
     style = style & (~Styles.ShowBorder) //可以方便去掉一个元素。
+```
+最简单的加减方法
+```
+style |= Styles.ShowBorder; //加Flag
+style &= ~Styles.ShowBorder;  //减去Flag
 ```
 
 - 枚举加自定义属性
