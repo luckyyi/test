@@ -96,3 +96,6 @@ style &= ~Styles.ShowBorder;  //减去Flag
 
 - 如何搭建一个 HTTPS 服务端
   - http://www.tuicool.com/articles/QFnU7za
+
+- FluentNHibernate
+  - http://blog.csdn.net/eqera/article/details/8412261
