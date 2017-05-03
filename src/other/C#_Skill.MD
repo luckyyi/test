@@ -85,6 +85,16 @@ style |= Styles.ShowBorder; //加Flag
 style &= ~Styles.ShowBorder;  //减去Flag
 ```
 
+在SQL中也支持与或运算
+```
+Update [dbo].[Settings]
+ SET [style] &= ([style] ^ 8)  //减去Flag值
+ 
+Update [dbo].[Settings]
+ SET [style] = ([style] ^ 8)
+ WHERE [style] & 8 = 0  //没有就加上Flag值
+```
+
 - 枚举加自定义属性
   - `http://blog.csdn.net/fanbin168/article/details/51576581`
 
