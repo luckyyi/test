@@ -3,11 +3,15 @@
   - http://stackoverflow.com/questions/4137106/are-there-net-implementation-of-tls-1-2
 
 - 解决方法
-  - 在代码中加上下面的代码，指定SSL1.2
-```
-System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls; // comparable to modern browsers
-```
+  - 在代码中加上下面的代码，指定使用3种SSL(1.0 | 1.1 | 1.2)
+  
+  `System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls; // comparable to modern browsers
+  `
 
+  - http://stackoverflow.com/questions/28286086/default-securityprotocol-in-net-4-5
+  - To turn on TLS 1.1 and 1.2 without affecting other protocols:
+  
+  `System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;`
 
 - NServiceBus 在命令行运行时报错 Index was outside the bounds of the array.
   - https://github.com/Particular/NServiceBus/issues/1964
