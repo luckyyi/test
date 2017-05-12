@@ -37,7 +37,9 @@
 - 同步执行Async方法
   - 在异步方法中直接用 .Result 去获取数据，有时会无限等待，最好用下面的类。
   - http://stackoverflow.com/questions/5095183/how-would-i-run-an-async-taskt-method-synchronously
-  - https://social.msdn.microsoft.com/Forums/en-US/163ef755-ff7b-4ea5-b226-bbe8ef5f4796/is-there-a-pattern-for-calling-an-async-method-synchronously?forum=async
+  - https://social.msdn.microsoft.com/Forums/en-US/163ef755-ff7b-4ea5-b226-bbe8ef5f4796/is-there-a-pattern-for-calling-an-async-method-synchronously?forum=async 
+  
+  - **如果在子线程中使用主线程的线程的时候，就会无限等待，这种Case在子线程中New一个Task.Run就OK了**
 
 
 - MVC传递匿名参数
