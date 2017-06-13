@@ -9,3 +9,4 @@
  git config --global mergetool.keepbackup false
  ```
  
+git mergetool
