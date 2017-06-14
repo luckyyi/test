@@ -1,3 +1,6 @@
+- Simple http server
+  - https://www.npmjs.com/package/http-server
+
 - WYSIWYG Editor
   - http://summernote.org/
 
