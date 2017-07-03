@@ -16,3 +16,8 @@ GET [index]/[document]/[id]
 `
 http://www.cnblogs.com/luxiaoxun/archive/2015/10/11/4869509.html
 `
+
+## Java
+```
+- http://blog.csdn.net/u014039577/article/details/52439766
+```
