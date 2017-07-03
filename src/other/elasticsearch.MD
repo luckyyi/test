@@ -57,3 +57,8 @@ PUT admin/_mapping/account
 GET admin/account/_mapping
 ```
 或者用curl XPOST | XPUT执行。
+
+
+# 相关文档
+http://itindex.net/detail/54724-elasticsearch-mapping
+
