@@ -11,3 +11,8 @@ GET [index]/[document]/[id]
 ```
 ## API
 ` https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html `
+
+## C#
+`
+http://www.cnblogs.com/luxiaoxun/archive/2015/10/11/4869509.html
+`
