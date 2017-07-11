@@ -101,6 +101,20 @@ Update [dbo].[Settings]
  WHERE [style] & 8 = 0  //没有就加上Flag值
 ```
 
+还可以用位移 << (Shift) 把组合数关闭，下次打开的时候还原备份, >> (RightShift)
+<< operation
+位移备份不影响之前设置的基数取决于们移的位数，例如：
+```
+var combin = 7;
+var base = 65536; // 1 << 16
+
+combin << 15 & base //0 success
+combin << 16 & base //65536 fail
+
+所以这个位移的安全数取决于位移了多少位，位移的位数一定要大于枚举中的最大值。如下：
+如果我们最大的枚举值是1 << 8，那么位移7位就是安全的。
+```
+
 - 枚举加自定义属性
   - `http://blog.csdn.net/fanbin168/article/details/51576581`
 
