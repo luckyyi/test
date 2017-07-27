@@ -10,6 +10,11 @@
   - 输入plugin list 查看已安装插件  
   - http://localhost:9200/_plugin/marvel/sense/index.html
   
+  - 安装head插件
+  
+  ` plugin -i mobz/elasticsearch-head `
+  
+  
   
   
 - 更新版本安装marvel插件
