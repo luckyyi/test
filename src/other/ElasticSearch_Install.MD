@@ -21,6 +21,9 @@
  ` kibana plugin --install elasticsearch/marvel/latest `
  
  在kibana的Settings菜单后面有个九宫格，点击，进入相应的插件。 
-  
+ 
+ 安装Sense
+ ` kibana plugin --install elastic/sense `
+  
   
   
