@@ -10,3 +10,10 @@
  ```
  
 git mergetool
+
+
+# ssh-keygen
+
+```
+ssh-keygen -t RSA
+```
