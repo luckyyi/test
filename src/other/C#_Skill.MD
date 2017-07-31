@@ -129,3 +129,12 @@ combin << 16 & base //65536 fail
 
 - FluentNHibernate
   - http://blog.csdn.net/eqera/article/details/8412261
+
+## Cmder
+- http://cmder.net/
+下载full version，解压
+### 注册右键菜单
+
+```
+cmder /register user | all
+```
