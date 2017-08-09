@@ -30,3 +30,5 @@ node.js - 文章 - SegmentFault
 https://www.reddit.com/r/node/
 
 https://www.zhihu.com/?next=%2Ftopic#Node.js
+
+https://mp.weixin.qq.com/s?__biz=MzIwNjEwNTQ4Mw%3D%3D&mid=2651577312&idx=1&sn=389fc76375a288b4fc2090690aed207a&chksm=8cd9c504bbae4c127e44476abcbfb5a8b5b295714c7ad19db0743999cbacb973a0f2d9ee07a7
