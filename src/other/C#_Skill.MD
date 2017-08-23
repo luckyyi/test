@@ -138,3 +138,6 @@ combin << 16 & base //65536 fail
 ```
 cmder /register user | all
 ```
+
+# Visual Studio Code treasures
+https://medium.com/wehkamp-techblog/visual-studio-code-treasures-1accae07c60a
