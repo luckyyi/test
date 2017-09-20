@@ -115,6 +115,8 @@ combin << 16 & base //65536 fail
 如果我们最大的枚举值是1 << 8，那么位移7位就是安全的。
 ```
 
+https://www.w3schools.com/js/js_bitwise.asp
+
 - 枚举加自定义属性
   - `http://blog.csdn.net/fanbin168/article/details/51576581`
 
