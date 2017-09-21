@@ -143,3 +143,11 @@ cmder /register user | all
 
 # Visual Studio Code treasures
 https://medium.com/wehkamp-techblog/visual-studio-code-treasures-1accae07c60a
+
+
+# sublime text3 auto format json
+## Pretty JSON
+### hotkey: CTRL + ALT + J
+
+- CTRL + SHIFT + P : Install Package
+- Pretty JSON
