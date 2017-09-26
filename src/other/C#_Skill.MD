@@ -91,6 +91,12 @@ style |= Styles.ShowBorder; //加Flag
 style &= ~Styles.ShowBorder;  //减去Flag
 ```
 
+下面是JS代码
+```
+style = style | value; //add value
+style = style & (style ^ value); //remove value
+```
+
 在SQL中也支持与或运算
 ```
 Update [dbo].[Settings]
