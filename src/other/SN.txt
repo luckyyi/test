@@ -1,3 +1,5 @@
+https://112.17.83.25:8443/svn/fabric-admin
+
 如何获取当前在线的用户QQ？
 在页面上加一个iframe，嵌入如下url，分析页面内容，找出QQ号，貌似有的浏览器要确定安全才可以显示的。
 http://xui.ptlogin2.qq.com/cgi-bin/qlogin
