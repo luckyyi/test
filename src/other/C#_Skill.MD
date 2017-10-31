@@ -21,6 +21,13 @@
 - NHibernate的子对象为空时报错： NHibernate.ObjectNotFoundException: No row with the given identifier exists
   - 在Mapping的代码加上 .NotFound.Ignore();
   
+- NHibernate加入对象后报错：An audited relation from XO.Local.Domain.Entities.Profiles.Profile.ProfileUpdates to a not audited entity XO.Local.Domain.Entities.Profiles.ProfileUpdate! Such mapping is possible, but has to be explicitly defined using [Audited(TargetAuditMode = RelationTargetAuditMode.NotAudited)]
+  - 在FluentConfiguration的EnversConfiguration的配置中加上排除Audit代码即可：
+  ```
+  var config = new FluentConfiguration();
+  config.Audit<Profile>().Exclude(x => x.ProfileUpdates);
+  ```
+
  
 # C#技巧
 - App.Config，各个环境不同配置的覆盖。
