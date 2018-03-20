@@ -62,3 +62,5 @@ GET admin/account/_mapping
 # 相关文档
 http://itindex.net/detail/54724-elasticsearch-mapping
 
+# 查询 
+https://coyee.com/article/10764-23-useful-elasticsearch-example-queries
